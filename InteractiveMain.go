@@ -83,7 +83,7 @@ func UserInputLoop() {
 func CommandShell(hostname string) {
 	scanner := bufio.NewScanner(os.Stdin)
 	for {
-		time.Sleep(time.Second * 2)
+		time.Sleep(time.Second * 1)
 		fmt.Printf("$ %s Shell?>> ", hostname)
 		if scanner.Scan() {
 			commandString := scanner.Text()
@@ -91,7 +91,6 @@ func CommandShell(hostname string) {
 			if commandString == "exit" {
 				return
 			}
-			fmt.Println("After sending to command channel") // 添加这行打印语句
 			select {
 			case command <- commandString:
 				FlagBool = true

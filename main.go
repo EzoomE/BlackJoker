@@ -36,8 +36,8 @@ var (
 	PendingRequestsMap            = make(map[string]PendingRequests)
 	ObtainingOnlineNumberOfPeople []SessionInfo
 	mu                            sync.Mutex
-	flag                          = make(chan string)
-	command                       = make(chan string)
+	flag                          = make(chan string, 2)
+	command                       = make(chan string, 5)
 	FlagBool                      bool
 )
 
@@ -102,7 +102,6 @@ func (r *RoutingGroup) Mysql(json string) {
 	}()
 	select {
 	case jsonOS := <-jsonOSystem:
-		// fmt.Println("Mysql:", jsonOS)
 		err := jsonOSsystemDB.MysqlMain(jsonOS)
 		if err != nil {
 			log.Println(err)
@@ -134,9 +133,7 @@ func (r *RoutingGroup) AttackShell(c *gin.Context) {
 		case adminCookie := <-flag:
 			{
 				_ = findSession(adminCookie)
-				fmt.Println("这里是Command通道接收点,正在执行1")
 				CommandStr := <-command
-				fmt.Println("这里是Command通道接收点,以步出1")
 				c.String(http.StatusOK, CommandStr)
 			}
 		case <-timeout:
@@ -145,9 +142,7 @@ func (r *RoutingGroup) AttackShell(c *gin.Context) {
 			}
 		}
 	} else if FlagBool == true {
-		fmt.Println("这里是Command通道接收点,正在执行3")
 		CommandStr := <-command
-		fmt.Println("这里是Command通道接收点,以步出3")
 		c.String(http.StatusOK, CommandStr)
 	}
 }
