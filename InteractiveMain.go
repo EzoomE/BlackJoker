@@ -15,9 +15,11 @@ func handleHelp() {
 func handleSessionList() {
 	mu.Lock()
 	if ObtainingOnlineNumberOfPeople == nil {
-		fmt.Print("空")
+		fmt.Print("空\n")
 	}
-	fmt.Println(ObtainingOnlineNumberOfPeople)
+	for _, i := range ObtainingOnlineNumberOfPeople {
+		fmt.Println(i)
+	}
 	mu.Unlock()
 }
 
@@ -31,9 +33,12 @@ func handleShell(input string) {
 	if len(parts) >= 2 {
 		hostname := parts[1]
 		if findSession(hostname) {
-			fmt.Println("Before sending to flag channel") // 添加这行打印语句
-			flag <- hostname
-			fmt.Println("After sending to flag channel") // 添加这行打印语句
+			go func() {
+				FlagInTrue <- hostname
+			}()
+			go func() {
+				FlagInFalse = hostname
+			}()
 			CommandShell(hostname)
 		}
 	} else {
@@ -58,15 +63,16 @@ func UserInputLoop() {
 		fmt.Print("$ JokerOSshell?>> ")
 		if scanner.Scan() {
 			input := scanner.Text()
-
 			switch {
-			case input == "help":
+			case strings.ToLower(input) == "help":
+
 				handleHelp()
-			case input == "SessionList":
+			case strings.ToLower(input) == "sessionlist":
+
 				handleSessionList()
-			case input == "exit":
+			case strings.ToLower(input) == "exit":
 				handleExit()
-			case strings.HasPrefix(input, "Shell"):
+			case strings.HasPrefix(input, "shell"):
 				handleShell(input)
 			default:
 				handleDefault()

