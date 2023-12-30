@@ -12,7 +12,7 @@ import time
 import subprocess
 import requests
 
-ServerIP = "10.47.32.74"
+ServerIP = ""
 Cookie_admin = None
 flag = False
 
