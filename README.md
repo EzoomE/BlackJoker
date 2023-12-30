@@ -18,4 +18,5 @@ Linux:`go env -w CGO_ENABLED=0 GOOS=linux GOARCH=amd64`  `go build -o`
 2.Python语言环境(方便Client DeBug)  
 3.Server可编译为任意平台可执行文件  
   
-## 我非常期待它被修改和改进(这也是我公开他的目的),未来他会变成什么样呢
+## 我非常期待它被修改和改进(这也是我公开他的目的),未来他会变成什么样呢  
+❤️*项目仍在更新中*
