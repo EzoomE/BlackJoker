@@ -9,7 +9,7 @@ Go的交叉编译可以使服务端运行在任何平台,如Linux
 2.如需编译go为二进制文件则在Blackarch下执行`go build -o`  
 3.该项目使用Mysql存储Session信息数据,需要首先手动在Blackarch/Mysql/jsonOSsystemDB.go中配置数据库信息,**!!!以及首先创建一个名为jsonossystem的数据库!!!**  
 4.服务端需要编译后使用,当你拥有Golang的环境后在BlackJoker/输入命令:  
-Windows:`go build -o`
+Windows:`go build -o`  
 Linux:`go env -w CGO_ENABLED=0 GOOS=linux GOARCH=amd64`  `go build -o`  
   
 环境要求:  
