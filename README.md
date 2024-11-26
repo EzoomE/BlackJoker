@@ -17,6 +17,14 @@
 ```
 pyinstaller -F -add-data "R-Cadimn.jpg" main.py
 ```
+开发者推荐的客户端编译代码
+
+```
+python BlackJoker/Client/ClientPyd/Cython编译环境/setup.py build_ext --inplace
+
+BlackJoker/Client/ClientPyd/Cython编译环境/main.py:
+
+```
 
 4.需要自定义编译服务端需要Golang环境
 
