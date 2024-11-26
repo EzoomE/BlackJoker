@@ -1,0 +1,8 @@
+{
+    "ServerIp": "10.47.14.16",
+    "MysqlUserName":"root",
+    "MysqlPassword":"LUrui15296092828_",
+    "MysqlIp":"127.0.0.1",
+    "MysqlPort":"3306",
+    "MysqlDbName":"jsonossystem"
+}
