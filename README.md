@@ -55,8 +55,23 @@ cd BlackJoker
 go build -o Black.exe
 
 ```
+Linux系统:
 
-你也可以从我们的发行版获取Zip压缩包，其中包含BlackJoker.exe
+```
+go env -w GOOS=linux GOARCH=amd64
+
+go build -o Black.exe
+```
+
+Mac系统:
+
+```
+go env -w GOOS=darwin3 GOARCH=amd64
+
+go build -o Black.exe
+```
+
+你也可以从我们的发行版获取BlackJoker.exe
 
 ## BlackJoker Attack Mod:
 
